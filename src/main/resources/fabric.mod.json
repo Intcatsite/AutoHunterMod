@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "autohunter",
+  "version": "${version}",
+  "name": "Auto Hunter",
+  "description": "Automatically hunts down all living creatures on keypress.",
+  "authors": [
+    "Gemini CLI"
+  ],
+  "contact": {
+    "sources": "https://github.com/example/autohunter"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.example.autohunter.AutoHunterClient"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "minecraft": "1.16.5",
+    "java": ">=8"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

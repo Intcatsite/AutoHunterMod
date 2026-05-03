@@ -1,0 +1,71 @@
+plugins {
+	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://fabricmc.net/wiki/tutorial:setup для получения дополнительной информации.
+}
+
+dependencies {
+	// To dev against minecraft, we need the minecraft dependency.
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+	// Use the yarn mappings to decompile minecraft and get readable variable/method names.
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
+	// The Fabric Loader is required to actually load the mod.
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// The Fabric API is a collection of common hooks and inter-compatibility features for mods.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	// Minecraft 1.16.5 uses Java 8, but for development we can use higher if needed (Loom handles it).
+	// However, to be safe and compatible with 1.16.5, we'll target Java 8.
+	it.options.release = 8
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archives_base_name}"}
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html для получения дополнительной информации о том, как настроить репозитории.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for retrieving dependencies.
+	}
+}
